@@ -394,3 +394,36 @@ body::after {
     font-size: 10px;
   }
 }
+
+.theme-btn-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.theme-btn-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #1a1a2e;
+  color: #e0d8f0;
+  border: 1px solid rgba(120, 100, 200, 0.25);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  animation: theme-pop-in 0.25s ease-out;
+  pointer-events: none;
+}
+
+@keyframes theme-pop-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+[data-theme='light'] .theme-btn-pop {
+  background: #f0ecf8;
+  color: #2a1a3e;
+  border-color: rgba(120, 100, 200, 0.2);
+}

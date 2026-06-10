@@ -105,6 +105,7 @@
   background: var(--bg-elevated);
   margin-bottom: 48px;
   box-shadow: var(--shadow-md);
+  max-width: 100%;
 }
 
 .pg-demo-inner {
@@ -122,6 +123,8 @@
   height: 480px;
   position: relative;
   background: #000;
+  max-width: 100%;
+  touch-action: none;
 }
 
 .pg-preview-controls {

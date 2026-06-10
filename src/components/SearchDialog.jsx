@@ -146,6 +146,12 @@ export default function SearchDialog({ open, onClose, onNavigate, onGoHome, onTo
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
+          <button className="sd-close-btn" onClick={onClose} title="Close search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
           <kbd className="sd-kbd-shortcut">
             <span className="sd-kbd-key">ESC</span>
           </kbd>

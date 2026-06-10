@@ -141,15 +141,31 @@ export default function Landing({ onEnter, theme, onToggleTheme }) {
 
       <header className="landing-header">
         <div className="landing-header-inner">
-          <span className="landing-logo">{'\u25A0'} opencode</span>
+          <span className="landing-logo">{'\u25A0'} ManiacUI</span>
           <nav className={`landing-nav ${navOpen ? 'open' : ''}`}>
             <a href="#features" onClick={e => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); setNavOpen(false) }}>Features</a>
             <a href="#how-it-works" onClick={e => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); setNavOpen(false) }}>How it Works</a>
-            <a href="https://opencode.ai" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">Docs</a>
-            <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">GitHub</a>
+            <a href="https://github.com/ronie-coder/ManiacUI" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">Docs</a>
+            <a href="https://github.com/ronie-coder/ManiacUI" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">GitHub</a>
             <button className="landing-nav-btn" onClick={() => { onEnter(); setNavOpen(false) }}>Components</button>
             <button className="landing-theme-btn" onClick={() => { onToggleTheme(); setNavOpen(false) }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
-              {theme === 'dark' ? '\u2600' : '\uD83C\uDF19'}
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              )}
             </button>
             <button className="landing-nav-mobile-toggle" onClick={() => setNavOpen(!navOpen)}>
               {navOpen ? '\u2715' : '\u2630'}
@@ -175,7 +191,7 @@ export default function Landing({ onEnter, theme, onToggleTheme }) {
               Explore Components
               <span className="landing-btn-arrow">&rarr;</span>
             </button>
-            <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener noreferrer" className="landing-btn landing-btn-secondary">
+            <a href="https://github.com/ronie-coder/ManiacUI" target="_blank" rel="noopener noreferrer" className="landing-btn landing-btn-secondary">
               View on GitHub
             </a>
           </div>
@@ -302,7 +318,7 @@ export default function Landing({ onEnter, theme, onToggleTheme }) {
 
       <footer className="landing-footer">
         <div className="landing-footer-inner">
-          <span className="landing-footer-logo">{'\u25A0'} opencode</span>
+          <span className="landing-footer-logo">{'\u25A0'} ManiacUI</span>
           <span className="landing-footer-text">Built with React, Three.js &amp; Rapier</span>
         </div>
       </footer>

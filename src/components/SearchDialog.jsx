@@ -24,7 +24,7 @@ const COMPONENTS = [
 
 const PAGES = [
   { id: 'home', name: 'Home', desc: 'Back to landing page' },
-  { id: 'docs', name: 'Docs', desc: 'opencode.ai documentation' },
+  { id: 'docs', name: 'Docs', desc: 'View documentation' },
   { id: 'github', name: 'GitHub', desc: 'View source on GitHub' },
 ]
 
@@ -41,7 +41,7 @@ function matchScore(query, text) {
   return 5 - idx * 0.1 - t.length * 0.01
 }
 
-export default function SearchDialog({ open, onClose, onNavigate, onGoHome, onToggleTheme }) {
+export default function SearchDialog({ open, onClose, onNavigate, onGoHome, onToggleTheme, onNavigateToDocs }) {
   const [query, setQuery] = useState('')
   const [selectedIdx, setSelectedIdx] = useState(0)
   const inputRef = useRef(null)
@@ -104,8 +104,8 @@ export default function SearchDialog({ open, onClose, onNavigate, onGoHome, onTo
 
   function executeItem(item) {
     if (item.id === 'home') { onGoHome(); onClose(); return }
-    if (item.id === 'docs') { window.open('https://opencode.ai', '_blank'); onClose(); return }
-    if (item.id === 'github') { window.open('https://github.com/anomalyco/opencode', '_blank'); onClose(); return }
+    if (item.id === 'docs') { onNavigateToDocs(); onClose(); return }
+    if (item.id === 'github') { window.open('https://github.com/ronie-coder/ManiacUI', '_blank'); onClose(); return }
     if (item.id === 'theme') { onToggleTheme(); onClose(); return }
     onNavigate(item.id)
     onClose()

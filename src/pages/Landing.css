@@ -482,7 +482,16 @@
   box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
-.landing-feature-icon { font-size: 24px; display: block; margin-bottom: 16px; }
+.landing-feature-icon {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.landing-feature-icon svg {
+  display: block;
+  filter: drop-shadow(0 0 12px rgba(126, 200, 227, 0.2));
+}
 
 .landing-feature-title {
   font-size: 15px;
@@ -750,6 +759,85 @@
   margin-bottom: 32px;
 }
 
+/* ── Demo Components ── */
+
+.landing-demo {
+  position: relative;
+  z-index: 1;
+  padding: 100px 24px;
+}
+
+.landing-demo-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.landing-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.landing-demo-card {
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.landing-demo-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.landing-demo-visual {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-demo-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 70%);
+}
+
+.landing-demo-icon {
+  color: rgba(255,255,255,0.9);
+  filter: drop-shadow(0 0 16px rgba(255,255,255,0.2));
+  z-index: 1;
+}
+
+.landing-demo-info {
+  padding: 16px 18px 18px;
+}
+
+.landing-demo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.landing-demo-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-faint);
+}
+
+.landing-demo-cta {
+  text-align: center;
+  margin-top: 40px;
+}
+
 /* ── Footer ── */
 
 .landing-footer {
@@ -861,8 +949,14 @@
   .landing-stat-value { font-size: 26px; }
   .landing-section-title, .landing-cta-title { font-size: 24px !important; }
   .landing-hero-title { font-size: 28px !important; }
+  .landing-demo { padding: 60px 16px; }
+  .landing-demo-grid { grid-template-columns: 1fr 1fr; }
   .landing-footer-inner { flex-direction: column; gap: 8px; text-align: center; }
   .landing-hero-card { display: none; }
+}
+
+@media (max-width: 480px) {
+  .landing-demo-grid { grid-template-columns: 1fr; }
 }
 
 /* hamburger */

@@ -3,32 +3,32 @@ import './Landing.css'
 
 const FEATURES = [
   {
-    icon: '\u{1F3D4}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>,
     title: '3D Physics Components',
     desc: 'Drag, swing, and interact with physics-driven 3D components powered by Rapier and React Three Fiber.',
   },
   {
-    icon: '\u{1F3A8}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><circle cx="13.5" cy="6.5" r="4.5" /><circle cx="17.5" cy="17.5" r="4.5" /><circle cx="6.5" cy="14.5" r="4.5" /><path d="M9 6.5 13.5 6.5" /><path d="M13.5 11 13.5 13.5" /><path d="M11 14.5 13.5 14.5" /></svg>,
     title: 'Real-time Customization',
     desc: 'Tweak colors, text, images, and more with live preview. See your changes instantly in the 3D viewport.',
   },
   {
-    icon: '\u{1F4BB}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /><line x1="14" y1="4" x2="10" y2="20" /></svg>,
     title: 'Monaco Code Viewer',
     desc: 'Full source code displayed alongside the preview with syntax highlighting and file tabs.',
   },
   {
-    icon: '\u{1F4CB}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><rect x="8" y="2" width="8" height="4" rx="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11v6" /><path d="M9 14h6" /></svg>,
     title: 'Copy-Ready Snippets',
     desc: 'Usage snippets auto-update with your props. Copy and paste directly into your project.',
   },
   {
-    icon: '\u{1F504}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>,
     title: 'Image Upload & Fit',
     desc: 'Upload front and back card images with cover or contain fit modes for the perfect layout.',
   },
   {
-    icon: '\u{1F30D}',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>,
     title: 'More Components Coming',
     desc: 'Interactive 3D globe and additional components are in development. Component library grows weekly.',
   },
@@ -56,6 +56,57 @@ const TESTIMONIALS = [
     quote: 'Drop-in 3D components that actually work. No fighting with Three.js config — just props and preview.',
     author: 'Marcus Johnson',
     role: 'Creative Developer at Linear',
+  },
+]
+
+const DEMO_COMPONENTS = [
+  {
+    name: 'Lanyard',
+    desc: 'Physics-based ID badge with realistic strap simulation',
+    gradient: 'linear-gradient(135deg, #7ec8e3, #6a5acd)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><rect x="5" y="4" width="14" height="16" rx="2" /><path d="M9 8h6" /><path d="M9 12h6" /><path d="M9 16h4" /><path d="M12 4v-2" /></svg>,
+  },
+  {
+    name: 'Blob',
+    desc: 'Organic morphing 3D shape that follows your cursor',
+    gradient: 'linear-gradient(135deg, #a78bfa, #f472b6)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><path d="M12 3c-4.5 0-8 3-8 8 0 5 3 10 8 10s8-5 8-10c0-5-3.5-8-8-8z" /><path d="M12 3v20" /></svg>,
+  },
+  {
+    name: 'Tilt Card',
+    desc: '3D perspective card that tilts with mouse movement',
+    gradient: 'linear-gradient(135deg, #f472b6, #fb923c)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 12h18" /><path d="M12 5v14" /></svg>,
+  },
+  {
+    name: 'Carousel',
+    desc: '3D spinning carousel with drag physics and inertia',
+    gradient: 'linear-gradient(135deg, #34d399, #7ec8e3)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>,
+  },
+  {
+    name: 'Fluid Orb',
+    desc: 'Liquid gradient blob with magnetic cursor tracking',
+    gradient: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10" /><path d="M8 12c0-4 2-8 4-8s4 4 4 8-2 8-4 8-4-4-4-8z" /></svg>,
+  },
+  {
+    name: 'Cursor Trail',
+    desc: 'Glowing gradient trail that follows your cursor',
+    gradient: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" /><path d="M13 13l6 6" /></svg>,
+  },
+  {
+    name: 'Scroll Progress',
+    desc: 'Progress bar with particle burst milestones',
+    gradient: 'linear-gradient(135deg, #7ec8e3, #34d399)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>,
+  },
+  {
+    name: 'Warp Card',
+    desc: 'Card with gravitational lensing hover distortion',
+    gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20"><circle cx="12" cy="12" r="3" /><path d="M12 2v4" /><path d="M12 18v4" /><path d="M2 12h4" /><path d="M18 12h4" /></svg>,
   },
 ]
 
@@ -144,6 +195,7 @@ export default function Landing({ onEnter, theme, onToggleTheme }) {
           <span className="landing-logo">{'\u25A0'} ManiacUI</span>
           <nav className={`landing-nav ${navOpen ? 'open' : ''}`}>
             <a href="#features" onClick={e => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); setNavOpen(false) }}>Features</a>
+            <a href="#components" onClick={e => { e.preventDefault(); document.getElementById('components')?.scrollIntoView({ behavior: 'smooth' }); setNavOpen(false) }}>Components</a>
             <a href="#how-it-works" onClick={e => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); setNavOpen(false) }}>How it Works</a>
             <a href="https://github.com/ronie-coder/ManiacUI" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">Docs</a>
             <a href="https://github.com/ronie-coder/ManiacUI" target="_blank" rel="noopener noreferrer" className="landing-nav-mobile-link">GitHub</a>
@@ -285,6 +337,34 @@ export default function Landing({ onEnter, theme, onToggleTheme }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Demo Components ─── */}
+      <section id="components" className="landing-demo" data-reveal>
+        <div className="landing-demo-inner">
+          <div className="landing-section-label">Components</div>
+          <h2 className="landing-section-title">Explore the component&nbsp;library</h2>
+          <p className="landing-section-desc">Each component is fully customizable with real-time preview and copy-ready code.</p>
+          <div className="landing-demo-grid">
+            {DEMO_COMPONENTS.map(c => (
+              <div key={c.name} className="landing-demo-card" onClick={onEnter}>
+                <div className="landing-demo-visual" style={{ background: c.gradient }}>
+                  <div className="landing-demo-icon">{c.icon}</div>
+                </div>
+                <div className="landing-demo-info">
+                  <h3 className="landing-demo-name">{c.name}</h3>
+                  <p className="landing-demo-desc">{c.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="landing-demo-cta">
+            <button className="landing-btn landing-btn-primary" onClick={onEnter}>
+              See All Components
+              <span className="landing-btn-arrow">&rarr;</span>
+            </button>
           </div>
         </div>
       </section>

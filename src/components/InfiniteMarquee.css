@@ -1,0 +1,90 @@
+.im-wrapper {
+  perspective: 400px;
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 0;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.im-bg-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(126, 200, 227, 0.04) 0%, transparent 70%);
+}
+
+.im-row {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.im-row--right .im-track {
+  animation-direction: reverse;
+}
+
+.im-row--pausable:hover .im-track {
+  animation-play-state: paused;
+}
+
+.im-track {
+  display: flex;
+  gap: var(--im-gap, 60px);
+  width: max-content;
+  animation: im-marquee var(--im-duration, 30s) linear infinite;
+  will-change: transform;
+}
+
+@keyframes im-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.im-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--im-gap, 60px);
+  font-size: var(--im-font-size, 14px);
+  color: var(--im-color, rgba(255, 255, 255, 0.4));
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  transform: perspective(400px) rotateY(5deg);
+  transition: color 0.3s, transform 0.3s;
+  cursor: default;
+  user-select: none;
+}
+
+.im-item:hover {
+  color: rgba(255, 255, 255, 0.8);
+  transform: perspective(400px) rotateY(5deg) scale(1.08);
+}
+
+.im-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .im-wrapper {
+    gap: 16px;
+    padding: 24px 0;
+  }
+}

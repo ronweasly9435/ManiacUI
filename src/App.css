@@ -199,6 +199,55 @@ body::after {
   background: var(--bg-hover);
 }
 
+.app-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 12px;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.app-search-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-search-text {
+  flex: 1;
+  text-align: left;
+}
+
+.app-search-kbd {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.app-search-kbd-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-dim2);
+  line-height: 1;
+}
+
 .app-theme-btn {
   font-size: 15px;
   line-height: 1;
@@ -329,6 +378,16 @@ body::after {
   .app-header-link, .app-header-btn {
     font-size: 11px;
     padding: 4px 6px;
+  }
+
+  .app-search-btn {
+    min-width: auto;
+    padding: 5px 7px;
+  }
+
+  .app-search-text,
+  .app-search-kbd {
+    display: none;
   }
 
   .app-logo {

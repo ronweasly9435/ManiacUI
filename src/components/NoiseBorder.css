@@ -1,0 +1,20 @@
+.nb-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.nb-svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.nb-content {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  height: 100%;
+}

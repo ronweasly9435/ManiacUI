@@ -1,54 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-
-const styles = {
-  container: {
-    perspective: '1000px',
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    position: 'relative',
-    width: 300,
-    height: 400,
-    borderRadius: 16,
-    transformStyle: 'preserve-3d',
-    cursor: 'pointer',
-    transition: 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-    overflow: 'hidden',
-  },
-  glow: {
-    position: 'absolute',
-    inset: 0,
-    borderRadius: 16,
-    pointerEvents: 'none',
-    zIndex: 2,
-  },
-  shine: {
-    position: 'absolute',
-    inset: 0,
-    borderRadius: 16,
-    pointerEvents: 'none',
-    zIndex: 3,
-    transition: 'opacity 0.3s',
-  },
-  content: {
-    position: 'relative',
-    zIndex: 1,
-    width: '100%',
-    height: '100%',
-    borderRadius: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 32,
-    textAlign: 'center',
-    boxSizing: 'border-box',
-  },
-}
+import './TiltCard.css'
 
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -69,14 +20,18 @@ export default function TiltCard({
   height = 400,
   image = 'https://wallpapercave.com/wp/wp12409453.jpg',
   imageFit = 'cover',
+  glowColor = '#7ec8e3',
+  parallax = true,
+  scale = 1.02,
 }) {
   const cardRef = useRef(null)
   const [style, setStyle] = useState({
-    transform: 'rotateX(0deg) rotateY(0deg)',
+    transform: 'rotateX(0deg) rotateY(0deg) scale(1)',
     boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
   })
   const [glareStyle, setGlareStyle] = useState({ opacity: 0 })
   const [shinePos, setShinePos] = useState({ opacity: 0 })
+  const [glowPos, setGlowPos] = useState({ opacity: 0, x: 50, y: 50 })
   const [isHovered, setIsHovered] = useState(false)
 
   const handleMouseMove = useCallback((e) => {
@@ -92,7 +47,7 @@ export default function TiltCard({
     const rotateX = -(mouseY / (rect.height / 2)) * tiltDegree
 
     setStyle({
-      transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+      transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`,
       boxShadow: `${-mouseX * 0.08}px ${-mouseY * 0.08}px 40px rgba(0,0,0,0.4)`,
       transition: 'box-shadow 0.1s',
     })
@@ -113,17 +68,25 @@ export default function TiltCard({
       background: `radial-gradient(circle at ${relX}% ${relY}%, rgba(255,255,255,0.08) 0%, transparent 50%)`,
       transition: 'none',
     })
-  }, [tiltDegree, glare])
+
+    setGlowPos({
+      opacity: 0.6,
+      x: relX,
+      y: relY,
+      transition: 'none',
+    })
+  }, [tiltDegree, glare, scale])
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false)
     setStyle({
-      transform: 'rotateX(0deg) rotateY(0deg)',
+      transform: 'rotateX(0deg) rotateY(0deg) scale(1)',
       boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
       transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
     })
     setGlareStyle({ opacity: 0, transition: 'opacity 0.5s' })
     setShinePos({ opacity: 0, transition: 'opacity 0.5s' })
+    setGlowPos({ opacity: 0, x: 50, y: 50, transition: 'opacity 0.5s' })
   }, [])
 
   const handleMouseEnter = useCallback(() => {
@@ -134,11 +97,11 @@ export default function TiltCard({
   const fgRgb = hexToRgb(foregroundColor)
 
   return (
-    <div style={styles.container}>
+    <div className="tiltcard" style={{ width, height }}>
       <div
         ref={cardRef}
+        className="tiltcard-card"
         style={{
-          ...styles.card,
           transform: style.transform,
           boxShadow: style.boxShadow,
           transition: style.transition,
@@ -150,9 +113,19 @@ export default function TiltCard({
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleMouseEnter}
       >
+        <div className="tiltcard-border" style={{ borderRadius }} />
         <div
+          className="tiltcard-glow"
           style={{
-            ...styles.content,
+            background: `radial-gradient(circle at ${glowPos.x}% ${glowPos.y}%, ${glowColor}88 0%, transparent 60%)`,
+            opacity: glowPos.opacity,
+            transition: glowPos.transition,
+            borderRadius,
+          }}
+        />
+        <div
+          className="tiltcard-content"
+          style={{
             background: image
               ? `url(${image}) center / ${imageFit} no-repeat`
               : `linear-gradient(135deg, ${backgroundColor}, rgb(${bgRgb.r * 0.6},${bgRgb.g * 0.6},${bgRgb.b * 0.6}))`,
@@ -160,44 +133,37 @@ export default function TiltCard({
           }}
         >
           {image && (
-            <div style={{ position: 'absolute', inset: 0, borderRadius, background: 'rgba(0,0,0,0.45)', zIndex: 0, pointerEvents: 'none' }} />
+            <div className="tiltcard-overlay" style={{ borderRadius }} />
           )}
           {isHovered && (
             <div
+              className="tiltcard-light"
               style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius,
                 background: `radial-gradient(circle at 50% 0%, ${foregroundColor}11 0%, transparent 60%)`,
-                pointerEvents: 'none',
-                zIndex: 0,
               }}
             />
           )}
-          <div style={{ position: 'relative', zIndex: 2 }}>
+          <div className="tiltcard-layers">
+            {parallax && (
+              <div className="tiltcard-deco" style={{ color: foregroundColor }}>
+                &#9670;
+              </div>
+            )}
             <div
+              className="tiltcard-title"
               style={{
-                fontSize: 28,
-                fontWeight: 700,
                 color: foregroundColor,
-                marginBottom: 12,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                transform: 'translateZ(40px)',
-                transformStyle: 'preserve-3d',
                 textShadow: `0 2px 20px ${foregroundColor}44`,
+                transform: parallax ? 'translateZ(40px)' : 'none',
               }}
             >
               {text}
             </div>
             <div
+              className="tiltcard-subtitle"
               style={{
-                fontSize: 13,
                 color: `rgba(${fgRgb.r},${fgRgb.g},${fgRgb.b},0.7)`,
-                lineHeight: 1.6,
-                maxWidth: 220,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                transform: 'translateZ(24px)',
-                transformStyle: 'preserve-3d',
+                transform: parallax ? 'translateZ(24px)' : 'none',
               }}
             >
               {subtext}
@@ -206,8 +172,8 @@ export default function TiltCard({
         </div>
         {glare && (
           <div
+            className="tiltcard-glare"
             style={{
-              ...styles.glow,
               background: glareStyle.background || 'none',
               opacity: glareStyle.opacity ?? 0,
               transition: glareStyle.transition,
@@ -216,14 +182,15 @@ export default function TiltCard({
           />
         )}
         <div
+          className="tiltcard-shine"
           style={{
-            ...styles.shine,
             background: shinePos.background || 'none',
             opacity: shinePos.opacity ?? 0,
             transition: shinePos.transition,
             borderRadius,
           }}
         />
+        <div className="tiltcard-grain" style={{ borderRadius }} />
       </div>
     </div>
   )

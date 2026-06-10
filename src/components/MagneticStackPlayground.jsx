@@ -1,24 +1,22 @@
 import { useState, useCallback } from 'react'
 import Editor from '@monaco-editor/react'
-import Carousel from './Carousel'
-import carouselSource from './Carousel.jsx?raw'
+import MagneticStack from './MagneticStack'
+import magneticStackSource from './MagneticStack.jsx?raw'
 import { handleEditorBeforeMount } from './monacoTheme'
 import './Playground.css'
 
 const TABS = ['Preview', 'Code']
 const PROPS = [
-  { name: 'images', type: 'string[]', default: '8 Unsplash URLs', desc: 'Array of image URLs for each card' },
-  { name: 'labels', type: 'string[]', default: 'Default labels', desc: 'Custom labels per card. Cycles if fewer than images.' },
-  { name: 'cardWidth', type: 'number', default: '220', desc: 'Card width in pixels' },
-  { name: 'cardHeight', type: 'number', default: '300', desc: 'Card height in pixels' },
-  { name: 'radius', type: 'number', default: '380', desc: '3D circle radius in pixels' },
-  { name: 'autoRotate', type: 'boolean', default: 'true', desc: 'Enable auto rotation' },
-  { name: 'autoRotateSpeed', type: 'number', default: '0.8', desc: 'Auto rotation speed' },
-  { name: 'glare', type: 'boolean', default: 'true', desc: 'Show glare on hovered card' },
-  { name: 'reflection', type: 'boolean', default: 'true', desc: 'Show card reflections' },
-  { name: 'backgroundColor', type: 'string', default: '#0a0a0f', desc: 'Scene background color' },
+  { name: 'count', type: 'number', default: '5', desc: 'Number of stacked cards (3-8)' },
+  { name: 'colors', type: 'string[]', default: 'Accent→Purple gradient', desc: 'Array of background colors per card' },
+  { name: 'width', type: 'number', default: '280', desc: 'Card width in pixels' },
+  { name: 'height', type: 'number', default: '180', desc: 'Card height in pixels' },
   { name: 'borderRadius', type: 'number', default: '16', desc: 'Card corner radius' },
-  { name: 'accent', type: 'string', default: '#7ec8e3', desc: 'Accent color for glow, borders, and highlights' },
+  { name: 'intensity', type: 'number', default: '20', desc: 'Max mouse-follow offset in pixels' },
+  { name: 'fanRadius', type: 'number', default: '120', desc: 'Radial fan-out distance in pixels' },
+  { name: 'glare', type: 'boolean', default: 'true', desc: 'Show mouse-tracked glare on cards' },
+  { name: 'accent', type: 'string', default: '#7ec8e3', desc: 'Accent color for glow and borders' },
+  { name: 'stagger', type: 'number', default: '0.15', desc: 'Base lerp factor for card tracking speed' },
 ]
 
 function Section({ title, children }) {
@@ -61,39 +59,37 @@ function RangeRow({ label, value, min, max, step, onChange }) {
   )
 }
 
-export default function CarouselPlayground() {
+export default function MagneticStackPlayground() {
   const [tab, setTab] = useState('Preview')
   const [accent, setAccent] = useState('#7ec8e3')
-  const [bgColor, setBgColor] = useState('#0a0a0f')
-  const [cardWidth, setCardWidth] = useState(220)
-  const [cardHeight, setCardHeight] = useState(300)
-  const [radius, setRadius] = useState(380)
-  const [autoRotate, setAutoRotate] = useState(true)
-  const [autoRotateSpeed, setAutoRotateSpeed] = useState(0.8)
-  const [glare, setGlare] = useState(true)
-  const [reflection, setReflection] = useState(true)
+  const [count, setCount] = useState(5)
+  const [width, setWidth] = useState(280)
+  const [height, setHeight] = useState(180)
   const [borderRadius, setBorderRadius] = useState(16)
+  const [intensity, setIntensity] = useState(20)
+  const [fanRadius, setFanRadius] = useState(120)
+  const [glare, setGlare] = useState(true)
+  const [stagger, setStagger] = useState(0.15)
 
   const reset = useCallback(() => {
     setAccent('#7ec8e3')
-    setBgColor('#0a0a0f')
-    setCardWidth(220)
-    setCardHeight(300)
-    setRadius(380)
-    setAutoRotate(true)
-    setAutoRotateSpeed(0.8)
-    setGlare(true)
-    setReflection(true)
+    setCount(5)
+    setWidth(280)
+    setHeight(180)
     setBorderRadius(16)
+    setIntensity(20)
+    setFanRadius(120)
+    setGlare(true)
+    setStagger(0.15)
   }, [])
 
   return (
     <div className="gp-page">
       <div className="gp-hero">
-        <h1 className="gp-title">3D Carousel</h1>
+        <h1 className="gp-title">Magnetic Stack</h1>
         <p className="gp-desc">
-          A stunning 3D carousel with drag physics, momentum scrolling, reflections, depth of field, and ambient glow.
-          Pure CSS 3D — no canvas or WebGL required.
+          A stack of glass-morphism cards that follow your mouse with staggered magnetic attraction.
+          Click to fan out radially. Each layer has different translateZ and tracking speed.
         </p>
       </div>
 
@@ -110,54 +106,54 @@ export default function CarouselPlayground() {
         {tab === 'Preview' ? (
           <div className="gp-demo-inner">
             <div className="gp-preview-col">
-              <div className="gp-preview-scene" style={{ overflow: 'hidden' }}>
-                <Carousel
-                  accent={accent}
-                  cardWidth={cardWidth}
-                  cardHeight={cardHeight}
-                  radius={radius}
-                  autoRotate={autoRotate}
-                  autoRotateSpeed={autoRotateSpeed}
-                  glare={glare}
-                  reflection={reflection}
-                  backgroundColor={bgColor}
-                  borderRadius={borderRadius}
-                />
+              <div className="gp-preview-scene" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', position: 'relative' }}>
+                <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+                  <MagneticStack
+                    key={count}
+                    count={count}
+                    width={width}
+                    height={height}
+                    borderRadius={borderRadius}
+                    intensity={intensity}
+                    fanRadius={fanRadius}
+                    glare={glare}
+                    accent={accent}
+                    stagger={stagger}
+                  />
+                </div>
               </div>
               <div className="gp-preview-bottom">
                 <div className="gp-preview-controls">
                   <Section title="COLORS">
                     <ColorRow label="Accent" value={accent} onChange={e => setAccent(e.target.value)} />
-                    <ColorRow label="BG" value={bgColor} onChange={e => setBgColor(e.target.value)} />
                   </Section>
-                  <Section title="LAYOUT">
-                    <RangeRow label="Width" value={cardWidth} min={140} max={320} step={10} onChange={setCardWidth} />
-                    <RangeRow label="Height" value={cardHeight} min={200} max={400} step={10} onChange={setCardHeight} />
-                    <RangeRow label="Radius" value={radius} min={200} max={600} step={10} onChange={setRadius} />
+                  <Section title="STACK">
+                    <RangeRow label="Count" value={count} min={3} max={8} step={1} onChange={setCount} />
+                    <RangeRow label="Width" value={width} min={160} max={400} step={10} onChange={setWidth} />
+                    <RangeRow label="Height" value={height} min={120} max={300} step={10} onChange={setHeight} />
+                    <RangeRow label="Radius" value={borderRadius} min={0} max={40} step={2} onChange={setBorderRadius} />
                   </Section>
                   <Section title="MOTION">
-                    <ToggleRow label="Auto-spin" value={autoRotate} onChange={setAutoRotate} />
-                    <RangeRow label="Speed" value={autoRotateSpeed} min={0.1} max={3} step={0.1} onChange={setAutoRotateSpeed} />
+                    <RangeRow label="Intensity" value={intensity} min={5} max={50} step={2} onChange={setIntensity} />
+                    <RangeRow label="Stagger" value={stagger} min={0.05} max={0.4} step={0.01} onChange={setStagger} />
+                    <RangeRow label="Fan Radius" value={fanRadius} min={60} max={250} step={10} onChange={setFanRadius} />
                   </Section>
                   <Section title="EFFECTS">
                     <ToggleRow label="Glare" value={glare} onChange={setGlare} />
-                    <ToggleRow label="Reflection" value={reflection} onChange={setReflection} />
-                    <RangeRow label="Rounding" value={borderRadius} min={0} max={30} step={2} onChange={setBorderRadius} />
                   </Section>
                 </div>
                 <div className="gp-usage-panel">
                   <div className="gp-doc-section">
                     <h2 className="gp-doc-h2">Usage</h2>
-                    <pre className="gp-doc-code">{`import Carousel from './components/Carousel'
-import './components/Carousel.css'
+                    <pre className="gp-doc-code">{`import MagneticStack from './components/MagneticStack'
+import './components/MagneticStack.css'
 
 function Demo() {
   return (
-    <Carousel
-      autoRotate
-      glare
-      reflection
+    <MagneticStack
+      count={5}
       accent="#7ec8e3"
+      glare
     />
   )
 }`}</pre>
@@ -174,7 +170,7 @@ function Demo() {
                 language="javascript"
                 theme="single-color"
                 beforeMount={handleEditorBeforeMount}
-                value={carouselSource}
+                value={magneticStackSource}
                 options={{
                   readOnly: true,
                   minimap: { enabled: false },
@@ -194,7 +190,7 @@ function Demo() {
       <div className="gp-docs">
         <section className="gp-doc-section">
           <h2 className="gp-doc-h2">Installation</h2>
-          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">Carousel.jsx</code> and <code className="gp-doc-inline">Carousel.css</code> into your project.</p>
+          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">MagneticStack.jsx</code> and <code className="gp-doc-inline">MagneticStack.css</code> into your project.</p>
         </section>
 
         <section className="gp-doc-section">

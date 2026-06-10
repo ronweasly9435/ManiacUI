@@ -1,24 +1,20 @@
 import { useState, useCallback } from 'react'
 import Editor from '@monaco-editor/react'
-import Carousel from './Carousel'
-import carouselSource from './Carousel.jsx?raw'
+import GridMorph from './GridMorph'
+import gridMorphSource from './GridMorph.jsx?raw'
 import { handleEditorBeforeMount } from './monacoTheme'
 import './Playground.css'
 
 const TABS = ['Preview', 'Code']
 const PROPS = [
-  { name: 'images', type: 'string[]', default: '8 Unsplash URLs', desc: 'Array of image URLs for each card' },
-  { name: 'labels', type: 'string[]', default: 'Default labels', desc: 'Custom labels per card. Cycles if fewer than images.' },
-  { name: 'cardWidth', type: 'number', default: '220', desc: 'Card width in pixels' },
-  { name: 'cardHeight', type: 'number', default: '300', desc: 'Card height in pixels' },
-  { name: 'radius', type: 'number', default: '380', desc: '3D circle radius in pixels' },
-  { name: 'autoRotate', type: 'boolean', default: 'true', desc: 'Enable auto rotation' },
-  { name: 'autoRotateSpeed', type: 'number', default: '0.8', desc: 'Auto rotation speed' },
-  { name: 'glare', type: 'boolean', default: 'true', desc: 'Show glare on hovered card' },
-  { name: 'reflection', type: 'boolean', default: 'true', desc: 'Show card reflections' },
-  { name: 'backgroundColor', type: 'string', default: '#0a0a0f', desc: 'Scene background color' },
-  { name: 'borderRadius', type: 'number', default: '16', desc: 'Card corner radius' },
-  { name: 'accent', type: 'string', default: '#7ec8e3', desc: 'Accent color for glow, borders, and highlights' },
+  { name: 'gridSize', type: 'number', default: '12', desc: 'Number of cells per row/column' },
+  { name: 'cellGap', type: 'number', default: '2', desc: 'Gap between cells in pixels' },
+  { name: 'cellRadius', type: 'number', default: '2', desc: 'Cell border radius in pixels' },
+  { name: 'color', type: 'string', default: '#7ec8e3', desc: 'Base cell color' },
+  { name: 'bgColor', type: 'string', default: '#0a0a0f', desc: 'Background color' },
+  { name: 'hoverColor', type: 'string', default: '#ffffff', desc: 'Color when mouse is near' },
+  { name: 'intensity', type: 'number', default: '1', desc: 'Effect intensity multiplier' },
+  { name: 'responsive', type: 'boolean', default: 'true', desc: 'Reduce cells on mobile' },
 ]
 
 function Section({ title, children }) {
@@ -61,39 +57,33 @@ function RangeRow({ label, value, min, max, step, onChange }) {
   )
 }
 
-export default function CarouselPlayground() {
+export default function GridMorphPlayground() {
   const [tab, setTab] = useState('Preview')
-  const [accent, setAccent] = useState('#7ec8e3')
+  const [gridSize, setGridSize] = useState(12)
+  const [cellGap, setCellGap] = useState(2)
+  const [cellRadius, setCellRadius] = useState(2)
+  const [color, setColor] = useState('#7ec8e3')
   const [bgColor, setBgColor] = useState('#0a0a0f')
-  const [cardWidth, setCardWidth] = useState(220)
-  const [cardHeight, setCardHeight] = useState(300)
-  const [radius, setRadius] = useState(380)
-  const [autoRotate, setAutoRotate] = useState(true)
-  const [autoRotateSpeed, setAutoRotateSpeed] = useState(0.8)
-  const [glare, setGlare] = useState(true)
-  const [reflection, setReflection] = useState(true)
-  const [borderRadius, setBorderRadius] = useState(16)
+  const [hoverColor, setHoverColor] = useState('#ffffff')
+  const [intensity, setIntensity] = useState(1)
 
   const reset = useCallback(() => {
-    setAccent('#7ec8e3')
+    setGridSize(12)
+    setCellGap(2)
+    setCellRadius(2)
+    setColor('#7ec8e3')
     setBgColor('#0a0a0f')
-    setCardWidth(220)
-    setCardHeight(300)
-    setRadius(380)
-    setAutoRotate(true)
-    setAutoRotateSpeed(0.8)
-    setGlare(true)
-    setReflection(true)
-    setBorderRadius(16)
+    setHoverColor('#ffffff')
+    setIntensity(1)
   }, [])
 
   return (
     <div className="gp-page">
       <div className="gp-hero">
-        <h1 className="gp-title">3D Carousel</h1>
+        <h1 className="gp-title">GridMorph</h1>
         <p className="gp-desc">
-          A stunning 3D carousel with drag physics, momentum scrolling, reflections, depth of field, and ambient glow.
-          Pure CSS 3D — no canvas or WebGL required.
+          A living CSS grid that ripples with wave-like propagation as your mouse moves — each cell
+          scales, brightens, and rotates based on proximity.
         </p>
       </div>
 
@@ -110,56 +100,40 @@ export default function CarouselPlayground() {
         {tab === 'Preview' ? (
           <div className="gp-demo-inner">
             <div className="gp-preview-col">
-              <div className="gp-preview-scene" style={{ overflow: 'hidden' }}>
-                <Carousel
-                  accent={accent}
-                  cardWidth={cardWidth}
-                  cardHeight={cardHeight}
-                  radius={radius}
-                  autoRotate={autoRotate}
-                  autoRotateSpeed={autoRotateSpeed}
-                  glare={glare}
-                  reflection={reflection}
-                  backgroundColor={bgColor}
-                  borderRadius={borderRadius}
+              <div className="gp-preview-scene">
+                <GridMorph
+                  gridSize={gridSize}
+                  cellGap={cellGap}
+                  cellRadius={cellRadius}
+                  color={color}
+                  bgColor={bgColor}
+                  hoverColor={hoverColor}
+                  intensity={intensity}
                 />
               </div>
               <div className="gp-preview-bottom">
                 <div className="gp-preview-controls">
+                  <Section title="GRID">
+                    <RangeRow label="Size" value={gridSize} min={4} max={20} step={1} onChange={setGridSize} />
+                    <RangeRow label="Gap" value={cellGap} min={0} max={8} step={1} onChange={setCellGap} />
+                    <RangeRow label="Radius" value={cellRadius} min={0} max={12} step={1} onChange={setCellRadius} />
+                  </Section>
                   <Section title="COLORS">
-                    <ColorRow label="Accent" value={accent} onChange={e => setAccent(e.target.value)} />
+                    <ColorRow label="Base" value={color} onChange={e => setColor(e.target.value)} />
+                    <ColorRow label="Hover" value={hoverColor} onChange={e => setHoverColor(e.target.value)} />
                     <ColorRow label="BG" value={bgColor} onChange={e => setBgColor(e.target.value)} />
                   </Section>
-                  <Section title="LAYOUT">
-                    <RangeRow label="Width" value={cardWidth} min={140} max={320} step={10} onChange={setCardWidth} />
-                    <RangeRow label="Height" value={cardHeight} min={200} max={400} step={10} onChange={setCardHeight} />
-                    <RangeRow label="Radius" value={radius} min={200} max={600} step={10} onChange={setRadius} />
-                  </Section>
-                  <Section title="MOTION">
-                    <ToggleRow label="Auto-spin" value={autoRotate} onChange={setAutoRotate} />
-                    <RangeRow label="Speed" value={autoRotateSpeed} min={0.1} max={3} step={0.1} onChange={setAutoRotateSpeed} />
-                  </Section>
                   <Section title="EFFECTS">
-                    <ToggleRow label="Glare" value={glare} onChange={setGlare} />
-                    <ToggleRow label="Reflection" value={reflection} onChange={setReflection} />
-                    <RangeRow label="Rounding" value={borderRadius} min={0} max={30} step={2} onChange={setBorderRadius} />
+                    <RangeRow label="Intensity" value={intensity} min={0.1} max={3} step={0.1} onChange={setIntensity} />
                   </Section>
                 </div>
                 <div className="gp-usage-panel">
                   <div className="gp-doc-section">
                     <h2 className="gp-doc-h2">Usage</h2>
-                    <pre className="gp-doc-code">{`import Carousel from './components/Carousel'
-import './components/Carousel.css'
+                    <pre className="gp-doc-code">{`import GridMorph from './components/GridMorph'
 
 function Demo() {
-  return (
-    <Carousel
-      autoRotate
-      glare
-      reflection
-      accent="#7ec8e3"
-    />
-  )
+  return <GridMorph gridSize={12} intensity={1} />
 }`}</pre>
                   </div>
                 </div>
@@ -174,7 +148,7 @@ function Demo() {
                 language="javascript"
                 theme="single-color"
                 beforeMount={handleEditorBeforeMount}
-                value={carouselSource}
+                value={gridMorphSource}
                 options={{
                   readOnly: true,
                   minimap: { enabled: false },
@@ -194,7 +168,7 @@ function Demo() {
       <div className="gp-docs">
         <section className="gp-doc-section">
           <h2 className="gp-doc-h2">Installation</h2>
-          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">Carousel.jsx</code> and <code className="gp-doc-inline">Carousel.css</code> into your project.</p>
+          <p className="gp-doc-p">No external dependencies required. Copy <code className="gp-doc-inline">GridMorph.jsx</code> and <code className="gp-doc-inline">GridMorph.css</code> into your project.</p>
         </section>
 
         <section className="gp-doc-section">

@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react'
 import Editor from '@monaco-editor/react'
 import TiltCard from './TiltCard'
 import tiltCardSource from './TiltCard.jsx?raw'
-import Orb from './backgrounds/Orb'
 import { handleEditorBeforeMount } from './monacoTheme'
 import './Playground.css'
 
@@ -19,6 +18,9 @@ const PROPS = [
   { name: 'borderRadius', type: 'number', default: '16', desc: 'Card corner radius' },
   { name: 'width', type: 'number', default: '300', desc: 'Card width in pixels' },
   { name: 'height', type: 'number', default: '400', desc: 'Card height in pixels' },
+  { name: 'glowColor', type: 'string', default: '#7ec8e3', desc: 'Color of the magnetic border glow' },
+  { name: 'parallax', type: 'boolean', default: 'true', desc: 'Enable 3D parallax depth layers' },
+  { name: 'scale', type: 'number', default: '1.02', desc: 'Card scale factor on hover' },
 ]
 
 function Section({ title, children }) {
@@ -80,9 +82,12 @@ export default function TiltCardPlayground() {
   const [tab, setTab] = useState('Preview')
   const [bgColor, setBgColor] = useState('#1a1a2e')
   const [fgColor, setFgColor] = useState('#ffffff')
+  const [glowColor, setGlowColor] = useState('#7ec8e3')
   const [text, setText] = useState('Hover Me')
   const [subtext, setSubtext] = useState('Move your cursor over the card')
   const [glare, setGlare] = useState(true)
+  const [parallax, setParallax] = useState(true)
+  const [scaleVal, setScaleVal] = useState(1.02)
   const [tiltDegree, setTiltDegree] = useState(15)
   const [borderRadius, setBorderRadius] = useState(16)
   const [width, setWidth] = useState(300)
@@ -93,9 +98,12 @@ export default function TiltCardPlayground() {
   const reset = useCallback(() => {
     setBgColor('#1a1a2e')
     setFgColor('#ffffff')
+    setGlowColor('#7ec8e3')
     setText('Hover Me')
     setSubtext('Move your cursor over the card')
     setGlare(true)
+    setParallax(true)
+    setScaleVal(1.02)
     setTiltDegree(15)
     setBorderRadius(16)
     setWidth(300)
@@ -110,8 +118,8 @@ export default function TiltCardPlayground() {
       <div className="gp-hero">
         <h1 className="gp-title">Tilt Card</h1>
         <p className="gp-desc">
-          A 3D perspective card with mouse-tracked tilt, dynamic glare, and shine effects.
-          Pure CSS/JS — no canvas or WebGL required.
+          A 3D perspective card with mouse-tracked tilt, magnetic border glow, parallax depth layers,
+          dynamic glare, and shine effects. Pure CSS/JS — no canvas or WebGL required.
         </p>
       </div>
 
@@ -129,21 +137,23 @@ export default function TiltCardPlayground() {
           <div className="gp-demo-inner">
             <div className="gp-preview-col">
               <div className="gp-preview-scene" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', position: 'relative' }}>
-                <Orb color="#7ec8e3" count={40} speed={0.3} size={0.06} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <TiltCard
-                  backgroundColor={bgColor}
-                  foregroundColor={fgColor}
-                  text={text}
-                  subtext={subtext}
-                  glare={glare}
-                  tiltDegree={tiltDegree}
-                  borderRadius={borderRadius}
-                  width={width}
-                  height={height}
-                  image={image}
-                  imageFit={imageFit}
-                />
+                    backgroundColor={bgColor}
+                    foregroundColor={fgColor}
+                    glowColor={glowColor}
+                    text={text}
+                    subtext={subtext}
+                    glare={glare}
+                    parallax={parallax}
+                    scale={scaleVal}
+                    tiltDegree={tiltDegree}
+                    borderRadius={borderRadius}
+                    width={width}
+                    height={height}
+                    image={image}
+                    imageFit={imageFit}
+                  />
                 </div>
               </div>
               <div className="gp-preview-bottom">
@@ -151,6 +161,7 @@ export default function TiltCardPlayground() {
                   <Section title="COLORS">
                     <ColorRow label="BG" value={bgColor} onChange={e => setBgColor(e.target.value)} />
                     <ColorRow label="Accent" value={fgColor} onChange={e => setFgColor(e.target.value)} />
+                    <ColorRow label="Glow" value={glowColor} onChange={e => setGlowColor(e.target.value)} />
                   </Section>
                   <Section title="CONTENT">
                     <TextRow label="Text" value={text} onChange={setText} placeholder="Main text" />
@@ -172,9 +183,11 @@ export default function TiltCardPlayground() {
                       )}
                     </div>
                   </Section>
-                  <Section title="TILT">
+                  <Section title="TILT & PARALLAX">
                     <ToggleRow label="Glare" value={glare} onChange={setGlare} />
+                    <ToggleRow label="Parallax" value={parallax} onChange={setParallax} />
                     <RangeRow label="Angle" value={tiltDegree} min={1} max={30} step={1} onChange={setTiltDegree} />
+                    <RangeRow label="Scale" value={scaleVal} min={1} max={1.1} step={0.01} onChange={setScaleVal} />
                   </Section>
                   <Section title="SIZE">
                     <RangeRow label="W" value={width} min={160} max={500} step={10} onChange={setWidth} />
@@ -195,7 +208,10 @@ function Demo() {
       text="Hello"
       subtext="World"
       glare
+      parallax
       tiltDegree={15}
+      scale={1.02}
+      glowColor="#7ec8e3"
     />
   )
 }`}</pre>
@@ -232,7 +248,7 @@ function Demo() {
       <div className="gp-docs">
         <section className="gp-doc-section">
           <h2 className="gp-doc-h2">Installation</h2>
-          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">TiltCard.jsx</code> into your project.</p>
+          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">TiltCard.jsx</code> and <code className="gp-doc-inline">TiltCard.css</code> into your project.</p>
         </section>
 
         <section className="gp-doc-section">

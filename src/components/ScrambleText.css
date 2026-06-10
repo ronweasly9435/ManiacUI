@@ -1,0 +1,119 @@
+.st-wrap {
+  position: relative;
+  display: inline-block;
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  cursor: default;
+  user-select: none;
+}
+
+.st-text {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 2;
+}
+
+.st-char {
+  display: inline-block;
+  min-width: 0.55em;
+  text-align: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0.5;
+  transform: scale(0.9);
+}
+
+.st-char.st-done {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Chromatic Aberration ── */
+
+.st-active .st-text {
+  animation: st-shake 0.08s infinite;
+}
+
+@keyframes st-shake {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-1px, 0.5px); }
+  50% { transform: translate(1px, -0.5px); }
+  75% { transform: translate(-0.5px, -1px); }
+}
+
+.st-glitch .st-text {
+  text-shadow:
+    -3px 0 rgba(0, 255, 255, 0.7),
+    3px 0 rgba(255, 0, 255, 0.7);
+  animation: st-shake 0.06s infinite, st-chromatic 0.15s infinite steps(1);
+}
+
+@keyframes st-chromatic {
+  0% { text-shadow: -3px 0 #0ff, 3px 0 #f0f; }
+  25% { text-shadow: 2px -1px #0ff, -2px 1px #f0f; }
+  50% { text-shadow: -1px 2px #0ff, 1px -2px #f0f; }
+  75% { text-shadow: 4px 0 #0ff, -4px 0 #f0f; }
+}
+
+/* ── Glitch Layer ── */
+
+.st-glitch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: difference;
+}
+
+.st-glitch-el {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 2px;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.st-glitch .st-glitch-a {
+  opacity: 0.5;
+  animation: st-strip1 0.3s infinite steps(1);
+  clip-path: inset(0 0 0 0);
+  color: #0ff;
+}
+
+.st-glitch .st-glitch-b {
+  opacity: 0.35;
+  animation: st-strip2 0.4s infinite steps(1);
+  clip-path: inset(0 0 0 0);
+  color: #f0f;
+}
+
+@keyframes st-strip1 {
+  0% { clip-path: inset(0 0 85% 0); }
+  10% { clip-path: inset(25% 0 55% 0); }
+  20% { clip-path: inset(8% 0 75% 0); }
+  30% { clip-path: inset(55% 0 25% 0); }
+  40% { clip-path: inset(15% 0 65% 0); }
+  50% { clip-path: inset(65% 0 15% 0); }
+  60% { clip-path: inset(2% 0 88% 0); }
+  70% { clip-path: inset(45% 0 35% 0); }
+  80% { clip-path: inset(12% 0 70% 0); }
+  90% { clip-path: inset(72% 0 8% 0); }
+  100% { clip-path: inset(30% 0 50% 0); }
+}
+
+@keyframes st-strip2 {
+  0% { clip-path: inset(55% 0 25% 0); }
+  10% { clip-path: inset(8% 0 75% 0); }
+  20% { clip-path: inset(40% 0 40% 0); }
+  30% { clip-path: inset(68% 0 12% 0); }
+  40% { clip-path: inset(3% 0 82% 0); }
+  50% { clip-path: inset(48% 0 32% 0); }
+  60% { clip-path: inset(18% 0 62% 0); }
+  70% { clip-path: inset(78% 0 2% 0); }
+  80% { clip-path: inset(2% 0 80% 0); }
+  90% { clip-path: inset(60% 0 20% 0); }
+  100% { clip-path: inset(35% 0 45% 0); }
+}

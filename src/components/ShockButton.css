@@ -1,0 +1,139 @@
+.shock-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  transition: transform 0.15s, box-shadow 0.25s, background 0.3s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shock-btn:active {
+  transform: scale(0.96);
+}
+
+.shock-btn-label {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* sizes */
+.shock-btn--sm {
+  padding: 8px 18px;
+  font-size: 12px;
+  gap: 6px;
+}
+
+.shock-btn--md {
+  padding: 12px 28px;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.shock-btn--lg {
+  padding: 16px 38px;
+  font-size: 16px;
+  gap: 10px;
+}
+
+/* variant: primary */
+.shock-btn--primary {
+  background: linear-gradient(135deg, var(--shock-color), color-mix(in srgb, var(--shock-color) 70%, #000));
+  color: #fff;
+}
+
+.shock-btn--primary:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--shock-color) 90%, #fff), var(--shock-color));
+  box-shadow: 0 0 24px var(--shock-color);
+}
+
+/* variant: outline */
+.shock-btn--outline {
+  background: transparent;
+  color: var(--shock-color);
+  border: 2px solid var(--shock-color);
+}
+
+.shock-btn--outline:hover {
+  background: color-mix(in srgb, var(--shock-color) 10%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--shock-color) 30%, transparent);
+}
+
+/* variant: ghost */
+.shock-btn--ghost {
+  background: transparent;
+  color: var(--shock-color);
+  border: none;
+}
+
+.shock-btn--ghost:hover {
+  background: color-mix(in srgb, var(--shock-color) 10%, transparent);
+}
+
+/* glow effect */
+.shock-btn--glow {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--shock-color) 25%, transparent), 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.shock-btn--glow:hover {
+  box-shadow: 0 0 36px color-mix(in srgb, var(--shock-color) 40%, transparent), 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.shock-btn--glow.shock-btn--primary {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--shock-color) 30%, transparent), 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* shimmer sweep on hover */
+.shock-btn-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  transition: background-position 0s;
+}
+
+.shock-btn:hover .shock-btn-shimmer {
+  background-position: -100% 0;
+  transition: background-position 0.7s ease-in-out;
+}
+
+/* ripple rings */
+.shock-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  border: 2px solid var(--shock-color);
+  animation: shockwave-ring 0.6s ease-out forwards;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+}
+
+@keyframes shockwave-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(6);
+    opacity: 0;
+  }
+}

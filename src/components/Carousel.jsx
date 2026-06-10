@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
+import './Carousel.css'
 
 const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400',
@@ -11,9 +12,7 @@ const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?w=400',
 ]
 
-const COLORS = [
-  '#1a1a3e', '#2e1a3e', '#1a3e2e', '#3e2e1a', '#1a2e3e', '#3e1a2e', '#2e3e1a', '#1a2a2e',
-]
+const DEFAULT_LABELS = ['Explore', 'Create', 'Dream', 'Build', 'Innovate', 'Design', 'Launch', 'Grow']
 
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1, 3), 16)
@@ -22,22 +21,19 @@ function hexToRgb(hex) {
   return { r, g, b }
 }
 
-const DEFAULT_LABELS = ['Explore', 'Create', 'Dream', 'Build', 'Innovate', 'Design', 'Launch', 'Grow']
-
 export default function Carousel({
   images = DEFAULT_IMAGES,
   labels,
   cardWidth = 220,
   cardHeight = 300,
   radius = 380,
-  perspective = 1200,
   autoRotate = true,
   autoRotateSpeed = 0.8,
   glare = true,
   reflection = true,
   backgroundColor = '#0a0a0f',
   borderRadius = 16,
-  cardBackground = '#1a1a2e',
+  accent = '#7ec8e3',
 }) {
   const containerRef = useRef(null)
   const [angle, setAngle] = useState(0)
@@ -54,20 +50,24 @@ export default function Carousel({
   const cards = useMemo(() =>
     images.map((img, i) => ({
       img,
-      color: COLORS[i % COLORS.length],
       label: labels ? labels[i % labels.length] : DEFAULT_LABELS[i % DEFAULT_LABELS.length],
     })),
     [images, labels]
   )
 
+  const sparkles = useMemo(() =>
+    Array.from({ length: 12 }, () => ({
+      top: 20 + Math.random() * 60,
+      left: 10 + Math.random() * 80,
+      delay: Math.random() * 3,
+      duration: 3 + Math.random() * 4,
+    })),
+    []
+  )
+
   const goTo = useCallback((dir) => {
     setAngle(a => a + dir * step * 2)
   }, [step])
-
-  const handleWheel = useCallback((e) => {
-    e.preventDefault()
-    goTo(e.deltaY > 0 ? 1 : -1)
-  }, [goTo])
 
   const handleDragStart = useCallback((e) => {
     const x = e.clientX ?? e.touches?.[0]?.clientX ?? 0
@@ -96,7 +96,6 @@ export default function Carousel({
       const start = performance.now()
       const initialVel = vel
       const friction = 0.92
-
       const momentum = (now) => {
         const elapsed = (now - start) / 16
         const decay = Math.pow(friction, elapsed)
@@ -116,6 +115,11 @@ export default function Carousel({
       y: (e.clientY - rect.top) / rect.height,
     })
   }, [])
+
+  const handleWheel = useCallback((e) => {
+    e.preventDefault()
+    goTo(e.deltaY > 0 ? 1 : -1)
+  }, [goTo])
 
   useEffect(() => {
     if (!autoRotate || isDragging) {
@@ -143,13 +147,18 @@ export default function Carousel({
     return (count - closest) % count
   }, [angle, step, count])
 
-  const bgRgb = hexToRgb(backgroundColor)
+  const accentRgb = hexToRgb(accent)
   const tiltX = (mousePos.x - 0.5) * 6
   const tiltY = (mousePos.y - 0.5) * -6
 
   return (
     <div
       ref={containerRef}
+      className="carousel"
+      style={{
+        background: backgroundColor,
+        cursor: isDragging ? 'grabbing' : 'grab',
+      }}
       onMouseDown={handleDragStart}
       onMouseMove={(e) => { handleDragMove(e); handleMouseMove(e) }}
       onMouseUp={handleDragEnd}
@@ -158,74 +167,46 @@ export default function Carousel({
       onTouchMove={handleDragMove}
       onTouchEnd={handleDragEnd}
       onWheel={handleWheel}
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: backgroundColor,
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: isDragging ? 'grabbing' : 'grab',
-        userSelect: 'none',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-      }}
     >
-      {/* Ambient glow */}
-      <div style={{
-        position: 'absolute', width: '70%', height: '70%',
-        borderRadius: '50%',
-        background: `radial-gradient(circle at 50% 50%, rgba(126,200,227,0.04) 0%, transparent 70%)`,
-        pointerEvents: 'none',
-        top: '15%', left: '15%',
-      }} />
-      <div style={{
-        position: 'absolute', width: '50%', height: '50%',
-        borderRadius: '50%',
-        background: `radial-gradient(circle at 50% 50%, rgba(126,200,227,0.03) 0%, transparent 70%)`,
-        pointerEvents: 'none',
-        bottom: '5%', right: '5%',
-      }} />
+      <div
+        className="carousel-ambient carousel-ambient-large"
+        style={{ background: `radial-gradient(circle at 50% 50%, ${accent}0a 0%, transparent 70%)` }}
+      />
+      <div
+        className="carousel-ambient carousel-ambient-small"
+        style={{ background: `radial-gradient(circle at 50% 50%, ${accent}08 0%, transparent 70%)` }}
+      />
 
-      {/* Particle sparkle dots */}
       {autoRotate && !isDragging && (
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} style={{
-              position: 'absolute',
-              width: 3, height: 3,
-              borderRadius: '50%',
-              background: 'rgba(126,200,227,0.5)',
-              top: `${20 + Math.random() * 60}%`,
-              left: `${10 + Math.random() * 80}%`,
-              animation: `carousel-float ${3 + Math.random() * 4}s ${Math.random() * 3}s infinite`,
-              opacity: 0,
-            }} />
+        <div className="carousel-sparkles">
+          {sparkles.map((s, i) => (
+            <div
+              key={i}
+              className="carousel-sparkle"
+              style={{
+                top: `${s.top}%`,
+                left: `${s.left}%`,
+                background: accent,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.duration}s`,
+              }}
+            />
           ))}
         </div>
       )}
 
-      {/* 3D Stage */}
       <div
+        className="carousel-stage"
         style={{
-          perspective,
-          perspectiveOrigin: '50% 50%',
           width: cardWidth + 80,
           height: cardHeight + 80,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           transform: `rotateX(${tiltY}deg) rotateY(${tiltX}deg)`,
           transition: isDragging ? 'none' : 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
         }}
       >
         <div
+          className="carousel-track"
           style={{
-            width: 0,
-            height: 0,
-            position: 'relative',
-            transformStyle: 'preserve-3d',
             transform: `rotateY(${angle}deg)`,
             transition: isDragging ? 'none' : 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)',
           }}
@@ -234,134 +215,114 @@ export default function Carousel({
             const cardAngle = step * i
             const isActive = i === activeIndex
             const isHovered = i === hoveredIndex
+            const distFromActive = Math.min(Math.abs(i - activeIndex), count - Math.abs(i - activeIndex))
+            const blurAmount = distFromActive * 1.5
+            const brightnessVal = 1 - distFromActive * 0.08
             const zOffset = isActive ? 30 : 0
             const scale = isActive ? 1.12 : isHovered ? 1.06 : 1
             const elevation = isActive ? 20 : 0
 
             return (
-              <div key={i} style={{ position: 'absolute', left: -cardWidth / 2, top: -cardHeight / 2 - elevation, transformStyle: 'preserve-3d' }}>
-                {/* Card */}
+              <div
+                key={i}
+                className="carousel-card-wrapper"
+                style={{ left: -cardWidth / 2, top: -cardHeight / 2 - elevation }}
+              >
                 <div
+                  className="carousel-card"
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
                   style={{
                     width: cardWidth,
                     height: cardHeight,
                     borderRadius,
-                    overflow: 'hidden',
-                    position: 'relative',
                     transform: `rotateY(${cardAngle}deg) translateZ(${radius + zOffset}px) scale(${scale})`,
                     transition: isDragging
                       ? 'none'
                       : 'transform 1s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s',
                     boxShadow: isActive
-                      ? `0 0 40px rgba(126,200,227,0.25), 0 20px 60px rgba(0,0,0,0.5)`
+                      ? `0 0 40px ${accent}44, 0 20px 60px rgba(0,0,0,0.5)`
                       : `0 8px 32px rgba(0,0,0,0.4)`,
-                    cursor: 'pointer',
-                    backfaceVisibility: 'hidden',
                   }}
                 >
-                  {/* Background image */}
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: `url(${card.img}) center / cover no-repeat`,
-                    filter: isActive ? 'brightness(1.1) saturate(1.1)' : 'brightness(0.9)',
-                    transition: 'filter 0.6s',
-                  }} />
-                  {/* Overlay gradient */}
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: `linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.1) 100%)`,
-                    zIndex: 1,
-                  }} />
+                  <div
+                    className="carousel-card-image"
+                    style={{
+                      backgroundImage: `url(${card.img})`,
+                      filter: `blur(${isActive ? 0 : blurAmount}px) brightness(${brightnessVal})`,
+                    }}
+                  />
+                  <div className="carousel-card-overlay" />
                   {isActive && (
-                    <div style={{
-                      position: 'absolute', inset: 0, zIndex: 2,
-                      background: 'linear-gradient(135deg, rgba(126,200,227,0.15) 0%, transparent 50%)',
-                      pointerEvents: 'none',
-                    }} />
+                    <div
+                      className="carousel-card-accent-overlay"
+                      style={{ background: `linear-gradient(135deg, ${accent}26 0%, transparent 50%)` }}
+                    />
                   )}
-                  {/* Glare */}
                   {glare && isHovered && (
-                    <div style={{
-                      position: 'absolute', inset: 0, zIndex: 3,
-                      background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,255,255,0.15) 0%, transparent 60%)`,
-                      pointerEvents: 'none',
-                      transition: 'background 0.15s',
-                    }} />
+                    <div
+                      className="carousel-card-glare"
+                      style={{
+                        background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,255,255,0.15) 0%, transparent 60%)`,
+                      }}
+                    />
                   )}
-                  {/* Active border glow */}
                   {isActive && (
-                    <div style={{
-                      position: 'absolute', inset: -1, borderRadius: borderRadius + 1, zIndex: 4,
-                      background: 'linear-gradient(135deg, rgba(126,200,227,0.4), rgba(126,200,227,0.1), rgba(126,200,227,0.4))',
-                      mask: `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-                      maskComposite: 'exclude',
-                      padding: 1,
-                      pointerEvents: 'none',
-                    }} />
+                    <div
+                      className="carousel-card-border-glow"
+                      style={{
+                        inset: -1,
+                        borderRadius: borderRadius + 1,
+                        background: `linear-gradient(135deg, ${accent}66, ${accent}1a, ${accent}66)`,
+                        mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        maskComposite: 'exclude',
+                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'xor',
+                        padding: 1,
+                      }}
+                    />
                   )}
-                  {/* Content */}
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 4,
-                    padding: '20px 18px 22px',
-                    transform: `translateZ(6px)`,
-                    transformStyle: 'preserve-3d',
-                  }}>
-                    <div style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: 2,
-                      color: 'rgba(255,255,255,0.5)',
-                      textTransform: 'uppercase',
-                      marginBottom: 6,
-                    }}>
+                  <div className="carousel-card-content" style={{ transform: `translateZ(6px)` }}>
+                    <div className="carousel-card-number">
                       {String(i + 1).padStart(2, '0')}
                     </div>
-                    <div style={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: '#fff',
-                      textShadow: '0 2px 20px rgba(0,0,0,0.5)',
-                    }}>
+                    <div className="carousel-card-label">
                       {card.label}
                     </div>
-                    <div style={{
-                      width: 24,
-                      height: 2,
-                      background: 'rgba(126,200,227,0.6)',
-                      marginTop: 10,
-                      borderRadius: 1,
-                      transition: 'width 0.4s',
-                    }} />
+                    <div
+                      className="carousel-card-accent-line"
+                      style={{
+                        background: `${accent}99`,
+                        width: isActive ? 40 : 24,
+                      }}
+                    />
                   </div>
                 </div>
 
-                {/* Reflection */}
                 {reflection && (
-                  <div style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: cardHeight + 8,
-                    width: cardWidth,
-                    height: cardHeight * 0.35,
-                    borderRadius,
-                    overflow: 'hidden',
-                    transform: `rotateY(${cardAngle}deg) translateZ(${radius + zOffset}px) scaleY(-1) scale(${scale})`,
-                    opacity: 0.15,
-                    transition: isDragging ? 'none' : 'transform 1s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s',
-                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
-                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
-                    pointerEvents: 'none',
-                  }}>
-                    <div style={{
-                      width: '100%', height: '100%',
-                      background: `url(${card.img}) center / cover no-repeat`,
-                    }} />
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      background: `linear-gradient(to bottom, rgba(10,10,15,0.4), ${backgroundColor})`,
-                    }} />
+                  <div
+                    className="carousel-reflection"
+                    style={{
+                      left: 0,
+                      top: cardHeight + 8,
+                      width: cardWidth,
+                      height: cardHeight * 0.35,
+                      borderRadius,
+                      transform: `rotateY(${cardAngle}deg) translateZ(${radius + zOffset}px) scaleY(-1) scale(${scale})`,
+                      opacity: 0.15,
+                      transition: isDragging
+                        ? 'none'
+                        : 'transform 1s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s',
+                    }}
+                  >
+                    <div
+                      className="carousel-reflection-image"
+                      style={{ backgroundImage: `url(${card.img})` }}
+                    />
+                    <div
+                      className="carousel-reflection-fade"
+                      style={{ background: `linear-gradient(to bottom, rgba(10,10,15,0.4), ${backgroundColor})` }}
+                    />
                   </div>
                 )}
               </div>
@@ -370,51 +331,34 @@ export default function Carousel({
         </div>
       </div>
 
-      {/* Navigation arrows */}
-      <button onClick={(e) => { e.stopPropagation(); goTo(-1) }} style={{
-        position: 'absolute', left: 24, top: '50%', marginTop: -20,
-        width: 40, height: 40, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        color: 'rgba(255,255,255,0.5)',
-        fontSize: 18, cursor: 'pointer', zIndex: 10,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        backdropFilter: 'blur(8px)',
-        transition: 'all 0.3s',
-      }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(126,200,227,0.15)'; e.currentTarget.style.color = '#7ec8e3'; e.currentTarget.style.borderColor = 'rgba(126,200,227,0.3)' }}
+      <button
+        className="carousel-nav carousel-nav-left"
+        onClick={(e) => { e.stopPropagation(); goTo(-1) }}
+        onMouseEnter={e => { e.currentTarget.style.background = `${accent}26`; e.currentTarget.style.color = accent; e.currentTarget.style.borderColor = `${accent}4d` }}
         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
-      >&#8249;</button>
-      <button onClick={(e) => { e.stopPropagation(); goTo(1) }} style={{
-        position: 'absolute', right: 24, top: '50%', marginTop: -20,
-        width: 40, height: 40, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        color: 'rgba(255,255,255,0.5)',
-        fontSize: 18, cursor: 'pointer', zIndex: 10,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        backdropFilter: 'blur(8px)',
-        transition: 'all 0.3s',
-      }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(126,200,227,0.15)'; e.currentTarget.style.color = '#7ec8e3'; e.currentTarget.style.borderColor = 'rgba(126,200,227,0.3)' }}
+      >
+        &#8249;
+      </button>
+      <button
+        className="carousel-nav carousel-nav-right"
+        onClick={(e) => { e.stopPropagation(); goTo(1) }}
+        onMouseEnter={e => { e.currentTarget.style.background = `${accent}26`; e.currentTarget.style.color = accent; e.currentTarget.style.borderColor = `${accent}4d` }}
         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
-      >&#8250;</button>
+      >
+        &#8250;
+      </button>
 
-      {/* Dots */}
-      <div style={{
-        position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)',
-        display: 'flex', gap: 8, zIndex: 10,
-      }}>
+      <div className="carousel-dots">
         {cards.map((_, i) => (
-          <button key={i} onClick={(e) => { e.stopPropagation(); setAngle(a => a + (i - activeIndex) * step) }} style={{
-            width: i === activeIndex ? 20 : 6,
-            height: 6,
-            borderRadius: 3,
-            border: 'none',
-            background: i === activeIndex ? '#7ec8e3' : 'rgba(255,255,255,0.2)',
-            cursor: 'pointer',
-            transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-          }} />
+          <button
+            key={i}
+            className="carousel-dot"
+            onClick={(e) => { e.stopPropagation(); setAngle(a => a + (i - activeIndex) * step) }}
+            style={{
+              width: i === activeIndex ? 20 : 6,
+              background: i === activeIndex ? accent : 'rgba(255,255,255,0.2)',
+            }}
+          />
         ))}
       </div>
     </div>

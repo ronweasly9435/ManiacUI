@@ -1,24 +1,21 @@
 import { useState, useCallback } from 'react'
 import Editor from '@monaco-editor/react'
-import Carousel from './Carousel'
-import carouselSource from './Carousel.jsx?raw'
+import WarpCard from './WarpCard'
+import warpCardSource from './WarpCard.jsx?raw'
 import { handleEditorBeforeMount } from './monacoTheme'
 import './Playground.css'
 
 const TABS = ['Preview', 'Code']
 const PROPS = [
-  { name: 'images', type: 'string[]', default: '8 Unsplash URLs', desc: 'Array of image URLs for each card' },
-  { name: 'labels', type: 'string[]', default: 'Default labels', desc: 'Custom labels per card. Cycles if fewer than images.' },
-  { name: 'cardWidth', type: 'number', default: '220', desc: 'Card width in pixels' },
-  { name: 'cardHeight', type: 'number', default: '300', desc: 'Card height in pixels' },
-  { name: 'radius', type: 'number', default: '380', desc: '3D circle radius in pixels' },
-  { name: 'autoRotate', type: 'boolean', default: 'true', desc: 'Enable auto rotation' },
-  { name: 'autoRotateSpeed', type: 'number', default: '0.8', desc: 'Auto rotation speed' },
-  { name: 'glare', type: 'boolean', default: 'true', desc: 'Show glare on hovered card' },
-  { name: 'reflection', type: 'boolean', default: 'true', desc: 'Show card reflections' },
-  { name: 'backgroundColor', type: 'string', default: '#0a0a0f', desc: 'Scene background color' },
+  { name: 'width', type: 'number', default: '320', desc: 'Card width in pixels' },
+  { name: 'height', type: 'number', default: '420', desc: 'Card height in pixels' },
+  { name: 'glowColor', type: 'string', default: '#7ec8e3', desc: 'Color of the magnetic border glow' },
+  { name: 'intensity', type: 'number', default: '15', desc: 'Max warp skew angle in degrees' },
+  { name: 'chromatic', type: 'boolean', default: 'true', desc: 'Enable chromatic aberration offset' },
+  { name: 'text', type: 'string', default: 'Warp', desc: 'Main heading text' },
+  { name: 'subtext', type: 'string', default: '...', desc: 'Subtitle or description text' },
+  { name: 'bgColor', type: 'string', default: '#0a0a0f', desc: 'Card background color' },
   { name: 'borderRadius', type: 'number', default: '16', desc: 'Card corner radius' },
-  { name: 'accent', type: 'string', default: '#7ec8e3', desc: 'Accent color for glow, borders, and highlights' },
 ]
 
 function Section({ title, children }) {
@@ -61,39 +58,52 @@ function RangeRow({ label, value, min, max, step, onChange }) {
   )
 }
 
-export default function CarouselPlayground() {
+function TextRow({ label, value, onChange, placeholder }) {
+  return (
+    <div className="gp-row">
+      <span className="gp-label">{label}</span>
+      <input
+        type="text"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="gp-text-input"
+      />
+    </div>
+  )
+}
+
+export default function WarpCardPlayground() {
   const [tab, setTab] = useState('Preview')
-  const [accent, setAccent] = useState('#7ec8e3')
+  const [width, setWidth] = useState(320)
+  const [height, setHeight] = useState(420)
+  const [glowColor, setGlowColor] = useState('#7ec8e3')
+  const [intensity, setIntensity] = useState(15)
+  const [chromatic, setChromatic] = useState(true)
+  const [text, setText] = useState('Warp')
+  const [subtext, setSubtext] = useState('Move your cursor to bend reality')
   const [bgColor, setBgColor] = useState('#0a0a0f')
-  const [cardWidth, setCardWidth] = useState(220)
-  const [cardHeight, setCardHeight] = useState(300)
-  const [radius, setRadius] = useState(380)
-  const [autoRotate, setAutoRotate] = useState(true)
-  const [autoRotateSpeed, setAutoRotateSpeed] = useState(0.8)
-  const [glare, setGlare] = useState(true)
-  const [reflection, setReflection] = useState(true)
   const [borderRadius, setBorderRadius] = useState(16)
 
   const reset = useCallback(() => {
-    setAccent('#7ec8e3')
+    setWidth(320)
+    setHeight(420)
+    setGlowColor('#7ec8e3')
+    setIntensity(15)
+    setChromatic(true)
+    setText('Warp')
+    setSubtext('Move your cursor to bend reality')
     setBgColor('#0a0a0f')
-    setCardWidth(220)
-    setCardHeight(300)
-    setRadius(380)
-    setAutoRotate(true)
-    setAutoRotateSpeed(0.8)
-    setGlare(true)
-    setReflection(true)
     setBorderRadius(16)
   }, [])
 
   return (
     <div className="gp-page">
       <div className="gp-hero">
-        <h1 className="gp-title">3D Carousel</h1>
+        <h1 className="gp-title">Warp Card</h1>
         <p className="gp-desc">
-          A stunning 3D carousel with drag physics, momentum scrolling, reflections, depth of field, and ambient glow.
-          Pure CSS 3D — no canvas or WebGL required.
+          A gravitational lensing card whose content distorts toward the cursor using skew transforms,
+          with chromatic aberration, grid background, and a magnetic border glow.
         </p>
       </div>
 
@@ -110,54 +120,56 @@ export default function CarouselPlayground() {
         {tab === 'Preview' ? (
           <div className="gp-demo-inner">
             <div className="gp-preview-col">
-              <div className="gp-preview-scene" style={{ overflow: 'hidden' }}>
-                <Carousel
-                  accent={accent}
-                  cardWidth={cardWidth}
-                  cardHeight={cardHeight}
-                  radius={radius}
-                  autoRotate={autoRotate}
-                  autoRotateSpeed={autoRotateSpeed}
-                  glare={glare}
-                  reflection={reflection}
-                  backgroundColor={bgColor}
-                  borderRadius={borderRadius}
-                />
+              <div className="gp-preview-scene" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', position: 'relative' }}>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <WarpCard
+                    width={width}
+                    height={height}
+                    glowColor={glowColor}
+                    intensity={intensity}
+                    chromatic={chromatic}
+                    text={text}
+                    subtext={subtext}
+                    bgColor={bgColor}
+                    borderRadius={borderRadius}
+                  />
+                </div>
               </div>
               <div className="gp-preview-bottom">
                 <div className="gp-preview-controls">
                   <Section title="COLORS">
-                    <ColorRow label="Accent" value={accent} onChange={e => setAccent(e.target.value)} />
                     <ColorRow label="BG" value={bgColor} onChange={e => setBgColor(e.target.value)} />
+                    <ColorRow label="Glow" value={glowColor} onChange={e => setGlowColor(e.target.value)} />
                   </Section>
-                  <Section title="LAYOUT">
-                    <RangeRow label="Width" value={cardWidth} min={140} max={320} step={10} onChange={setCardWidth} />
-                    <RangeRow label="Height" value={cardHeight} min={200} max={400} step={10} onChange={setCardHeight} />
-                    <RangeRow label="Radius" value={radius} min={200} max={600} step={10} onChange={setRadius} />
+                  <Section title="CONTENT">
+                    <TextRow label="Text" value={text} onChange={setText} placeholder="Main text" />
+                    <TextRow label="Sub" value={subtext} onChange={setSubtext} placeholder="Subtitle" />
                   </Section>
-                  <Section title="MOTION">
-                    <ToggleRow label="Auto-spin" value={autoRotate} onChange={setAutoRotate} />
-                    <RangeRow label="Speed" value={autoRotateSpeed} min={0.1} max={3} step={0.1} onChange={setAutoRotateSpeed} />
+                  <Section title="WARP">
+                    <ToggleRow label="Chromatic" value={chromatic} onChange={setChromatic} />
+                    <RangeRow label="Intensity" value={intensity} min={0} max={30} step={1} onChange={setIntensity} />
                   </Section>
-                  <Section title="EFFECTS">
-                    <ToggleRow label="Glare" value={glare} onChange={setGlare} />
-                    <ToggleRow label="Reflection" value={reflection} onChange={setReflection} />
-                    <RangeRow label="Rounding" value={borderRadius} min={0} max={30} step={2} onChange={setBorderRadius} />
+                  <Section title="SIZE">
+                    <RangeRow label="W" value={width} min={160} max={500} step={10} onChange={setWidth} />
+                    <RangeRow label="H" value={height} min={200} max={600} step={10} onChange={setHeight} />
+                    <RangeRow label="Radius" value={borderRadius} min={0} max={40} step={2} onChange={setBorderRadius} />
                   </Section>
                 </div>
                 <div className="gp-usage-panel">
                   <div className="gp-doc-section">
                     <h2 className="gp-doc-h2">Usage</h2>
-                    <pre className="gp-doc-code">{`import Carousel from './components/Carousel'
-import './components/Carousel.css'
+                    <pre className="gp-doc-code">{`import WarpCard from './components/WarpCard'
 
 function Demo() {
   return (
-    <Carousel
-      autoRotate
-      glare
-      reflection
-      accent="#7ec8e3"
+    <WarpCard
+      width={320}
+      height={420}
+      intensity={15}
+      glowColor="#7ec8e3"
+      text="Warp"
+      subtext="Move your cursor to bend reality"
+      chromatic
     />
   )
 }`}</pre>
@@ -174,7 +186,7 @@ function Demo() {
                 language="javascript"
                 theme="single-color"
                 beforeMount={handleEditorBeforeMount}
-                value={carouselSource}
+                value={warpCardSource}
                 options={{
                   readOnly: true,
                   minimap: { enabled: false },
@@ -194,7 +206,7 @@ function Demo() {
       <div className="gp-docs">
         <section className="gp-doc-section">
           <h2 className="gp-doc-h2">Installation</h2>
-          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">Carousel.jsx</code> and <code className="gp-doc-inline">Carousel.css</code> into your project.</p>
+          <p className="gp-doc-p">No external dependencies required. Simply copy <code className="gp-doc-inline">WarpCard.jsx</code> and <code className="gp-doc-inline">WarpCard.css</code> into your project.</p>
         </section>
 
         <section className="gp-doc-section">

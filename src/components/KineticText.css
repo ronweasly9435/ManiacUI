@@ -1,0 +1,5 @@
+.kt-canvas {
+  display: block;
+  border-radius: var(--radius);
+  max-width: 100%;
+}

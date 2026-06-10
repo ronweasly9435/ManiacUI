@@ -1,0 +1,124 @@
+.sb-root {
+  width: 220px;
+  min-width: 220px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.sb-root::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, var(--accent-glow), transparent);
+  opacity: 0.5;
+}
+
+.sb-header {
+  padding: 20px 16px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-dim2);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  margin: 0 8px;
+}
+
+.sb-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  font-family: inherit;
+  position: relative;
+}
+
+.sb-item:hover:not(.disabled) {
+  background: var(--bg-hover);
+}
+
+.sb-item.active {
+  background: var(--bg-active);
+  border-left: 2px solid var(--accent);
+  padding-left: 12px;
+}
+
+.sb-item.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent-glow), transparent);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.sb-item.active .sb-item-name {
+  color: var(--text);
+}
+
+.sb-item.disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.sb-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-faint);
+  position: relative;
+  z-index: 1;
+}
+
+.sb-item.active .sb-item-name {
+  color: var(--text);
+}
+
+.sb-item-desc {
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .sb-root {
+    position: fixed;
+    top: 48px;
+    left: 0;
+    bottom: 0;
+    z-index: 95;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sb-root.open {
+    transform: translateX(0);
+  }
+}

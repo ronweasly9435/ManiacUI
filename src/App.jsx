@@ -12,6 +12,7 @@ import ScrambleTextPlayground from './components/ScrambleTextPlayground'
 import WarpCardPlayground from './components/WarpCardPlayground'
 import InfiniteMarqueePlayground from './components/InfiniteMarqueePlayground'
 import GridMorphPlayground from './components/GridMorphPlayground'
+import LiquidChromePlayground from './components/LiquidChromePlayground'
 import ParticleImagePlayground from './components/ParticleImagePlayground'
 import RippleRevealPlayground from './components/RippleRevealPlayground'
 import MagneticStackPlayground from './components/MagneticStackPlayground'
@@ -169,6 +170,7 @@ export default function App() {
           {activeId === 'warpcard' && <WarpCardPlayground />}
           {activeId === 'infinitemarquee' && <InfiniteMarqueePlayground />}
           {activeId === 'gridmorph' && <GridMorphPlayground />}
+          {activeId === 'liquidchrome' && <LiquidChromePlayground />}
           {activeId === 'particleimage' && <ParticleImagePlayground />}
           {activeId === 'ripplereveal' && <RippleRevealPlayground />}
           {activeId === 'magneticstack' && <MagneticStackPlayground />}

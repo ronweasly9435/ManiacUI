@@ -12,6 +12,7 @@ const COMPONENTS = [
   { id: 'warpcard', name: 'Warp Card', desc: 'Gravitational lensing card' },
   { id: 'infinitemarquee', name: 'Infinite Marquee', desc: '3D perspective scroll tunnel' },
   { id: 'gridmorph', name: 'Grid Morph', desc: 'Proximity wave grid cells' },
+  { id: 'liquidchrome', name: 'Liquid Chrome', desc: 'Flowing metallic chrome surface' },
   { id: 'particleimage', name: 'Particle Image', desc: 'Image as interactive particles' },
   { id: 'ripplereveal', name: 'Ripple Reveal', desc: 'Click ripples reveal content' },
   { id: 'magneticstack', name: 'Magnetic Stack', desc: 'Cards with staggered magnetic mouse tracking' },
